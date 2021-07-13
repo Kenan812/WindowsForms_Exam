@@ -38,7 +38,5 @@ namespace WindowsFormsApp1.Model
         {
             Posts.Add(text);
         }
-
-
     }
 }

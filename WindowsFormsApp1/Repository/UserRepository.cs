@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 using WindowsFormsApp1.Model;
 
@@ -8,8 +9,9 @@ namespace WindowsFormsApp1.Repository
     class UserRepository : IUserRepository
     {
         public string xmlPath { get; set; }
-        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<User>));
+        public int PostsCount { get; set; }
 
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<User>));
         List<User> usersList;
 
         public UserRepository(string pathToFolder)
@@ -33,7 +35,6 @@ namespace WindowsFormsApp1.Repository
         }
 
 
-
         public IEnumerable<User> GetAllUsers()
         {
             return usersList;
@@ -43,6 +44,8 @@ namespace WindowsFormsApp1.Repository
         {
             return usersList[id];
         }
+
+
 
         public void SaveUser(User newUser, int id)
         {
@@ -66,6 +69,51 @@ namespace WindowsFormsApp1.Repository
             }
         }
 
+        public void UpdateUserPosts(int userID, int postID, string newPost)
+        {
+            if (userID >= usersList.Count)
+            {
+                MessageBox.Show("Incorrect user id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                usersList[userID].Posts[postID] = newPost;
+            }
+            catch (System.Exception)
+            {
+                // If the post is new
+
+                usersList[userID].AddPost(newPost);
+            }
+
+            SerializeAllUsers(usersList);
+        }
+
+
+        public void DeleteUserPost(int userID, int postID)
+        {
+            if (userID >= usersList.Count || postID >= usersList[userID].Posts.Count)
+            {
+                MessageBox.Show("Incorrect user or post id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+            try
+            {
+                usersList[userID].Posts.RemoveAt(postID);
+
+            }
+            catch (System.Exception)
+            {
+                MessageBox.Show("Unable to remove post", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            SerializeAllUsers(usersList);
+
+        }
 
 
         public int GetUserCount()

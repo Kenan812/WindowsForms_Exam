@@ -17,7 +17,14 @@ namespace WindowsFormsApp1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoginForm());
+
+            var repository = new Repository.UserRepository(Application.StartupPath);
+
+            var view = new View.LoginForm();
+
+            var presenter = new Presenter.UserPresenter(repository, view);
+
+            Application.Run(view);
         }
     }
 }

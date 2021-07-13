@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormsApp1.View
 {
-    partial class SingUpFrom
+    partial class SingUpForm
     {
         /// <summary>
         /// Required designer variable.

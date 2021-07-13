@@ -14,7 +14,9 @@ namespace WindowsFormsApp1.View
 {
     public partial class LoginForm : Form, IUserView
     {
-        SingUpFrom SingUpFrom;
+        SingUpForm SingUpForm;
+
+        PostsForm PostsForm;
 
         public List<string> Posts { get; set; }
 
@@ -35,15 +37,24 @@ namespace WindowsFormsApp1.View
             if (loginTextBox.Text != String.Empty && passwordTextBox.Text != String.Empty)
             {
                 User u = userPresenter.GetUser(loginTextBox.Text, passwordTextBox.Text);
-                AssignAllData(u);
+                if (u != null)
+                {
+                    AssignAllData(u);
+
+                    PostsForm = new PostsForm(userPresenter, userPresenter.SelectedUserID);
+                    PostsForm.ShowDialog();
+                    this.Close();
+                }
             }
         }
 
         
         private void singUpButton_Click(object sender, EventArgs e)
         {
-            SingUpFrom = new SingUpFrom(userPresenter);
-            SingUpFrom.ShowDialog();
+            SingUpForm = new SingUpForm(userPresenter);
+            
+            SingUpForm.ShowDialog();
+            userPresenter.UserView = this;
         }
 
 

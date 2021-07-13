@@ -7,44 +7,59 @@ namespace WindowsFormsApp1.Presenter
 {
     public class UserPresenter
     {
-        IUserRepository userRepository;
-        IUserView userView;
+        public IUserRepository UserRepository { get; set; }
+        public IUserView UserView { get; set; }
+
+        public int SelectedUserID { get; set; }
 
         public UserPresenter(IUserRepository repository, IUserView view)
         {
-            this.userRepository = repository;
+            this.UserRepository = repository;
             view.userPresenter = this;
-            this.userView = view;
+            this.UserView = view;
         }
 
 
         public User GetUser(string login, string password)
         {
-            foreach (User u in userRepository.GetAllUsers())
+            int count = 0;
+
+            foreach (User u in UserRepository.GetAllUsers())
             {
-                if (VerifyLogin(u, password))
+                if (VerifyLogin(u, login, password))
                 {
+                    SelectedUserID = count;
                     return u;
                 }
+                count++;
             }
 
-            System.Windows.Forms.MessageBox.Show("Wrong password or login", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error); ;
+            MessageBox.Show("Wrong password or login", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); ;
             return null;
         }
 
 
         public void AddUser(User user)
         {
-                MessageBox.Show("Test");
+            UserRepository.AddNewUser(user);
+        }
 
-            userRepository.AddNewUser(user);
+
+        public void UpdatePost(int userID, int postID, string newPost)
+        {
+            UserRepository.UpdateUserPosts(userID, postID, newPost);
+        }
+
+        public void DeletePost(int userID, int postID)
+        {
+            UserRepository.DeleteUserPost(userID, postID);
         }
 
 
 
-        private bool VerifyLogin(User u, string password)
+        private bool VerifyLogin(User u, string login, string password)
         {
-            if (u.Password == password)
+            if (u.Login == login && u.Password == password)
                 return true;
 
             return false;

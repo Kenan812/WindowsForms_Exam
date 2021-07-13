@@ -17,6 +17,9 @@ namespace WindowsFormsApp1.Repository
 
         void AddNewUser(User user);
 
+        void UpdateUserPosts(int userID, int postID, string newPost);
+
+        void DeleteUserPost(int userID, int postID);
 
     }
 }

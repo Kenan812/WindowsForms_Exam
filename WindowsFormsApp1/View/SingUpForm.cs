@@ -12,13 +12,14 @@ using WindowsFormsApp1.Presenter;
 
 namespace WindowsFormsApp1.View
 {
-    public partial class SingUpFrom : Form, IUserView
+    public partial class SingUpForm : Form, IUserView
     {
-        public SingUpFrom(UserPresenter up)
+        public SingUpForm(UserPresenter up)
         {
             InitializeComponent();
 
             userPresenter = up;
+            userPresenter.UserView = this;
         }
 
         public List<string> Posts { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -31,16 +32,13 @@ namespace WindowsFormsApp1.View
             if (loginTextBox.Text != String.Empty && passwordTextBox.Text != String.Empty && nameTextBox.Text != String.Empty)
             {
                 User u = new User(loginTextBox.Text, passwordTextBox.Text, nameTextBox.Text);
-                MessageBox.Show($"{userPresenter.ToString()}");
                 userPresenter.AddUser(u);
-                MessageBox.Show("Test");
                 this.Close();
             }
             else
             {
                 MessageBox.Show("One of the inputs is wrong", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
 

@@ -44,7 +44,6 @@
             this.userLoginTextBox.Name = "userLoginTextBox";
             this.userLoginTextBox.Size = new System.Drawing.Size(334, 30);
             this.userLoginTextBox.TabIndex = 7;
-            this.userLoginTextBox.TextChanged += new System.EventHandler(this.userLoginTextBox_TextChanged);
             // 
             // label1
             // 
@@ -67,7 +66,6 @@
             this.label2.Size = new System.Drawing.Size(77, 30);
             this.label2.TabIndex = 10;
             this.label2.Text = "Posts";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // addNewPostButton
             // 

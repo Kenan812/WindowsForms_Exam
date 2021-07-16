@@ -32,9 +32,7 @@ namespace WindowsFormsApp1.View
             userPresenter = up;
             userPresenter.UserView = this;
 
-            //
             userPresenter.SelectedUserID = userID;
-            //
 
             this.AutoScroll = true;
             currentUserID = userID;
@@ -55,7 +53,6 @@ namespace WindowsFormsApp1.View
                 GroupBox GP = PrepareNewGroupBox();
 
                 (GP.Controls[0] as Button).Text = "Edit";
-                //(GP.Controls[0] as Button).Enabled = true;
                 (GP.Controls[2] as TextBox).Text = post;
                 (GP.Controls[2] as TextBox).Enabled = false;
 
@@ -110,31 +107,30 @@ namespace WindowsFormsApp1.View
 
         private void ClearAllGroupBoxes()
         {
-            //MessageBox.Show($"{initialControlNumber}   {this.Controls.Count}");
-
-            int i = 0;
-
-            foreach (var item in this.Controls)
-            {
-                if (item is GroupBox)
+                for (int i = initialControlNumber; i < this.Controls.Count; i++)
                 {
-                    MessageBox.Show($"I: {i}\n{((item as GroupBox).Controls[2] as TextBox).Text}");
-
                     this.Controls.RemoveAt(i);
+                    i--;
                 }
-
-                i++;
-            }
-
         }
 
-
+        
+        
+        // Used when Updating the form (after deleting a post)
+        private void UpdateGroupBoxNames()
+        {
+            for (int i = initialControlNumber; i < this.Controls.Count; i++)
+            {
+                this.Controls[i].Name = (i - initialControlNumber).ToString();
+            }
+        }
+        
+        
         private void addNewPostButton_Click(object sender, EventArgs e)
         {
             GroupBox GP = PrepareNewGroupBox();
 
             this.Controls.Add(GP);
-            this.Refresh();
         }
 
 
@@ -159,19 +155,23 @@ namespace WindowsFormsApp1.View
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
-            Button b = sender as Button;
-            GroupBox groupBox = b.Parent as GroupBox; 
+            try
+            {
+                Button b = sender as Button;
+                GroupBox groupBox = b.Parent as GroupBox;
 
-            userPresenter.DeletePost(currentUserID, Int32.Parse(groupBox.Name));  // deleting post in user presenter
+                ClearAllGroupBoxes();
 
-            (groupBox.Parent as Form).Controls.RemoveAt(Int32.Parse(groupBox.Name) + initialControlNumber);  // deleting post in view
+                userPresenter.DeletePost(currentUserID, Int32.Parse(groupBox.Name));  // deleting post in user presenter
 
+                UpdateForm(UserLogin);
 
-            //GPCount = 0;
-
-            //ClearAllGroupBoxes();
-            //MessageBox.Show("Test");
-            //UpdateForm(UserLogin);
+                UpdateGroupBoxNames();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Message: {ex.Message}\n\nStachTrace: {ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 
@@ -182,23 +182,5 @@ namespace WindowsFormsApp1.View
         {
 
         }
-
-
-
-        // DELETE
-
-        private void userLoginTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-        // DELETE
     }
 }
